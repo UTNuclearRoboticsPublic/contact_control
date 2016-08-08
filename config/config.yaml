@@ -1,0 +1,6 @@
+config_data:
+  move_group: "sia10"
+  world_frame: "base_link"
+  ft_frame: "ft_sensor"
+  control_frame: "base_link"
+  init_pos: [0.0, -0.7, 0.0, 1.34, 0.0, 1.1, 0.0]
