@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(contact_control)
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  motoman_jogger
   move_interface
   netft_utils
   roscpp
@@ -84,7 +85,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES contact_control
-  CATKIN_DEPENDS move_interface roscpp std_msgs
+  CATKIN_DEPENDS move_interface netft_utils roscpp std_msgs
 #  DEPENDS system_lib
 )
 
@@ -107,25 +108,17 @@ add_library(contact_control
   src/history.cpp
 )
 
-## Declare a cpp executable
-add_executable(contact_control_node src/contact_control_node.cpp)
-
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 add_dependencies(contact_control ${catkin_EXPORTED_TARGETS})
-add_dependencies(contact_control_node ${catkin_EXPORTED_TARGETS})
+add_dependencies(contact_control netft_utils_lean)
 add_dependencies(contact_control netft_utils_generate_messages_cpp)
 # add_dependencies(contact_control_node contact_control_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(contact_control
   ${catkin_LIBRARIES}
-)
-
-## Specify libraries to link a library or executable target against
-target_link_libraries(contact_control_node
-  contact_control
-  ${catkin_LIBRARIES}
+  netft_utils_lean
 )
 
 #############

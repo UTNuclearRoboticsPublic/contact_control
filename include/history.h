@@ -1,3 +1,5 @@
+#ifndef TIME_HISTORY_H_
+#define TIME_HISTORY_H_
 /**
  * The TimeHistory class keeps track of a variable over time.
  */
@@ -53,3 +55,4 @@ private:
   std::queue<double> value;                     /*!< Queue holding the value at a specific time */
 };
 
+#endif /* TIME_HISTORY_H_ */
