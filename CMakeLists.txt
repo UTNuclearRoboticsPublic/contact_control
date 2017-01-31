@@ -118,7 +118,6 @@ add_dependencies(contact_control netft_utils_generate_messages_cpp)
 ## Specify libraries to link a library or executable target against
 target_link_libraries(contact_control
   ${catkin_LIBRARIES}
-  netft_utils_lean
 )
 
 #############
