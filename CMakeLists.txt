@@ -111,8 +111,6 @@ add_library(contact_control
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 add_dependencies(contact_control ${catkin_EXPORTED_TARGETS})
-add_dependencies(contact_control netft_utils_lean)
-add_dependencies(contact_control netft_utils_generate_messages_cpp)
 # add_dependencies(contact_control_node contact_control_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
