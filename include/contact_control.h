@@ -10,7 +10,7 @@
 #include <vector>
 #include <math.h>
 #include <geometry_msgs/WrenchStamped.h>
-#include <move_interface.h>
+#include <move_interface/move_interface.h>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <netft_utils/SetBias.h>
