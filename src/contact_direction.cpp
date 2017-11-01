@@ -23,7 +23,7 @@ ContactDirection::ContactDirection() :
 
 ContactDirection::~ContactDirection()
 {
-  delete listener;
+  // delete listener;
 }
 
 void ContactDirection::initialize(Contact::Dimension dim, std::string vf, std::string cf, tf::TransformListener* list)

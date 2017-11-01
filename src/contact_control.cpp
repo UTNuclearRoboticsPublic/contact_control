@@ -1,6 +1,6 @@
 #include "contact_control.h"
 
-ContactControl::ContactControl(ros::NodeHandle* nh) :
+ContactControl::ContactControl() :
 fixedFrame(""),
 velFrame(""),
 ftFrame(""),
@@ -9,7 +9,7 @@ ftAddress(""),
 ftTopic(""),
 velTopic("jog_command"),
 controlRate(500),
-n(nh),
+n(),
 endCondition(Contact::NO_CONDITION),
 isMoving(false),
 gravBalance(false),
@@ -26,7 +26,6 @@ netftCancel(false)
 
 ContactControl::~ContactControl()
 {
-  delete n;
   delete spinner;
   delete fti;
   delete listener;
@@ -40,7 +39,7 @@ void ContactControl::initialize(std::string mg, std::string ff, std::string vf, 
   spinner->start();
 
   // Create force/torque interface
-  fti = new NetftUtilsLean(n);
+  fti = new NetftUtilsLean(&n);
   if (!ftTopic.empty())
   {
     fti->setFTTopic(ftTopic);
@@ -81,11 +80,11 @@ void ContactControl::initialize(std::string mg, std::string ff, std::string vf, 
   listener = new tf::TransformListener(ros::Duration(300));
 
   // Initialize ROS publishers
-  delta_pub = n->advertise<geometry_msgs::TwistStamped>(velTopic, 1);
-  data_pub = n->advertise<std_msgs::Float64>("/position_delta", 100);
+  delta_pub = n.advertise<geometry_msgs::TwistStamped>(velTopic, 1);
+  data_pub = n.advertise<std_msgs::Float64>("/position_delta", 100);
 
   // Initialize ROS subscribers
-  netft_cancel_sub = n->subscribe("/netft/cancel", 1, &ContactControl::cancelCallback, this);
+  netft_cancel_sub = n.subscribe("/netft/cancel", 1, &ContactControl::cancelCallback, this);
 
   // Initialize contact directions
   direction[Contact::DIM_X].initialize(Contact::DIM_X, velFrame, controlFrame, listener);

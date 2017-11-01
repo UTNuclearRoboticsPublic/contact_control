@@ -28,9 +28,8 @@ class ContactControl
 public:
   /**
    * Constructor.
-   * @param nh Pointer to the node handle.
    */
-  ContactControl(ros::NodeHandle* nh);
+  ContactControl();
 
   /**
    * Destructor.
@@ -251,7 +250,7 @@ private:
   double controlRate;                              /*!< The control rate of the framework */
 
   // Objects
-  ros::NodeHandle* n;                              /*!< The ROS node handle for this instance */
+  ros::NodeHandle n;                              /*!< The ROS node handle for this instance */
   ros::AsyncSpinner* spinner;                      /*!< The ROS async spinner for this instance */
   tf::TransformListener* listener;                 /*!< Pointer to a transform listener */
   MoveInterface* mi;                               /*!< Pointer to the robot move interface */
