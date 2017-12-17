@@ -45,14 +45,14 @@ public:
    * @param cf        The name of the control frame that velocity commands are inputed in.
    */
   void initialize(std::string mg, std::string ff, std::string vf, std::string ftf, std::string cf);
-  
+
   /**
    * Sets spring constant.
    * @param dim       The dimension of control the spring constant will be readjusted on.
    * @param k         The spring constant.
    */
   void adjustSpringConstant(Contact::Dimension dim, double k);
-  
+
   /**
    * Sets chosen dimension to move in a direction and act as a spring to applied forces.
    * @param dim     The dimension you are setting the control law for.
@@ -62,7 +62,7 @@ public:
    * @param ftMax   The max force allowed in this direction.
    */
   void setMovement(Contact::Dimension dim, double vMax, double ftStall, double dMax, double ftMax);
-  
+
   /**
    * Sets chosen dimension to act as a spring
    * @param dim       The dimension you are setting the control law for.
@@ -72,7 +72,7 @@ public:
    * @param ftMax     The max force allowed in this direction.
    */
   void setSpring(Contact::Dimension dim, double k, double b, double posOffset, double ftMax);
-  
+
   /**
    * Sets chosen dimension to act as a spring
    * @param dim       The dimension you are setting the control law for.
@@ -83,7 +83,7 @@ public:
    * @param ftMax     The max force allowed in this direction.
    */
   void setSpring(Contact::Dimension dim, double k, double b, double posOffset, double dMax, double ftMax);
-  
+
   /**
    * Sets chosen dimension to act as a force follower
    * @param dim     The dimension you are setting the control law for.
@@ -91,7 +91,7 @@ public:
    * @param ftMax   The max force allowed in this direction.
    */
   void setFollower(Contact::Dimension dim, double b, double ftMax);
-  
+
   /**
    * Start a move. Dimensions will be controlled and move will be terminated
    * by conditions set in setter methods.
@@ -100,8 +100,8 @@ public:
    * @param vMax   The maximum velocity allowed for any direction of this move
    * @return       The reason that the move was ended
    */
-  Contact::EndCondition move(double fMax, double tMax, double vMax = 1.0);
-  
+  Contact::EndCondition move(double fMax = 0.0, double tMax = 0.0, double vMax = 1.0);
+
   /**
    * Start a move async. This allows evaluation of the end condition outside of contact control.
    * @param fMax   The magnitude of maximum combined force allowed
@@ -109,8 +109,8 @@ public:
    * @param vMax   The maximum velocity allowed for any direction of this move
    * @return       Future of the end condition variable
    */
-  std::future<Contact::EndCondition> moveAsync(double fMax, double tMax, double vMax = 1.0);
-  
+  std::future<Contact::EndCondition> moveAsync(double fMax = 0.0, double tMax = 0.0, double vMax = 1.0);
+
   /**
    * Balance an object on a surface by moving in the direction of gravity and following in all others.
    * Torque caused by force on surface will be subtracted from follower in that direction.
@@ -126,7 +126,7 @@ public:
    * @return         The reason that the move was ended
    */
   Contact::EndCondition balance(Contact::Dimension lDim, Contact::Dimension fDim, bool inWorld, double leverArm, Contact::Dimension mDim, double mSpeed, double fMax, double tMax);
-  
+
   /**
    * Balance an object async. This allows evaluation of the end condition outside of contact control.
    * Note: This functionality is untested.
@@ -141,7 +141,7 @@ public:
    * @return         Future of end condition variable
    */
   std::future<Contact::EndCondition> balanceAsync(Contact::Dimension lDim, Contact::Dimension fDim, bool inWorld, double leverArm, Contact::Dimension mDim, double mSpeed, double fMax, double tMax);
-  
+
   /**
    * Set the value of force/torque differential that will be considered an end condition.
    * This method is optional. The class defaults to ignoring FT differentials.
@@ -190,12 +190,12 @@ public:
    * @param time         The time the reading occured.
    */
    void getFT(Contact::Perspective perspective, double &ft, ros::Time &time);
-   
+
    /**
     * Stops the move.
     */
    void stopMove();
-   
+
   /**
    * Reset the control patterns for all dimensions.
    */
@@ -206,38 +206,38 @@ public:
    * return    The pointer to the active move interface instance.
    */
   MoveInterface* getMI();
-  
+
   /**
    * Return a pointer to the force/torque interface instance.
    * return    The pointer to the force/torque interface.
    */
   NetftUtilsLean* getFTI();
-  
+
   /**
    * Set the topic that force/torque data is read from.
    * @param ftTop      The force/torque data topic.
-   */ 
+   */
   void setFTTopic(std::string ftTop);
-  
+
   /**
    * Set the IP address of a force torque sensor that
    * netFT utils can read data from.
    * @param ftAdd      The force/torque sensor IP address.
-   */ 
+   */
   void setFTAddress(std::string ftAdd);
-  
+
   /**
    * Set the topic to output velocity commands to.
    * @param velTopic    The velocity jog command topic.
-   */ 
+   */
   void setVelTopic(std::string velTop);
-  
+
   /**
    * Set the control rate of the contact control framework.
    * @param cRate       The control rate for the framework.
-   */ 
+   */
   void setControlRate(double cRate);
-  
+
 private:
   // Config data
   std::string fixedFrame;                          /*!< The name of the fixed frame */
@@ -256,7 +256,7 @@ private:
   MoveInterface* mi;                               /*!< Pointer to the robot move interface */
   ContactDirection direction[Contact::NUM_DIMS];   /*!< Array of Contact direction objects */
   NetftUtilsLean* fti;                             /*!< Pointer to the force torque interface */
-  
+
   // Data
   geometry_msgs::PoseStamped startPose;            /*!< The start pose of the current move */
   geometry_msgs::WrenchStamped ftData;             /*!< ftData received from netft_utils in control frame */
@@ -270,7 +270,7 @@ private:
   double                gravLever;                 /*!< Length from FT sensor to balance contact force in meters */
   bool                  monitorFT;                 /*!< True if we are monitoring the FT sensor */
   bool                  isInit;                    /*!< True if this instance has been initialized correctly */
-  
+
   // ROS publishers
   ros::Publisher delta_pub;                        /*!< Publisher for commanded velocities */
   ros::Publisher data_pub;                         /*!< Convenience publisher for data to be plotted */
@@ -284,7 +284,7 @@ private:
    * Function that monitors the FT sensor
    */
   bool ftMonitor();
-  
+
   /**
    * Callback to the netft cancel message
    * @param msg Incoming cancel message.

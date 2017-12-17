@@ -73,7 +73,7 @@ void ContactDirection::setMovement(double vMax, double ftStall, double dMax, dou
     isReady = false;
   }
   else
-  { 
+  {
     springConstant = stallForceTorque/fabs(velocityMax);
     isReady = true;
   }
