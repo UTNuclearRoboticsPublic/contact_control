@@ -53,7 +53,7 @@ void ContactControl::initialize(std::string mg, std::string ff, std::string vf, 
     ROS_ERROR("Must set ft topic or address before initializing ContactControl.");
     return;
   }
-  
+
   if(!fti->initialize(controlRate, ff, ftf))
   {
     ROS_ERROR("Failed to initialize force torque interface");
@@ -61,7 +61,7 @@ void ContactControl::initialize(std::string mg, std::string ff, std::string vf, 
   }
   // Set max force and torque (used for threshold to cancel moves)
   fti->setMax(80.0, 8.0, 60.0, 6.0);
-  
+
   // Initialize variables
   if(ff.compare("") == 0 || vf.compare("") == 0 || ftf.compare("") == 0 || cf.compare("") == 0)
   {
@@ -72,7 +72,7 @@ void ContactControl::initialize(std::string mg, std::string ff, std::string vf, 
   velFrame = vf;
   ftFrame = ftf;
   controlFrame = cf;
-  
+
   // Initiallize the move interface
   mi->initialize(mg);
 
@@ -93,7 +93,7 @@ void ContactControl::initialize(std::string mg, std::string ff, std::string vf, 
   direction[Contact::DIM_RY].initialize(Contact::DIM_RY, velFrame, controlFrame, listener);
   direction[Contact::DIM_Z].initialize(Contact::DIM_Z, velFrame, controlFrame, listener);
   direction[Contact::DIM_RZ].initialize(Contact::DIM_RZ, velFrame, controlFrame, listener);
-  
+
   isInit = true;
 }
 
@@ -110,7 +110,7 @@ Contact::EndCondition ContactControl::move(double fMax, double tMax, double vMax
     ROS_ERROR_STREAM("Cannot perform move. Contact control was not initialized properly.");
     return Contact::NOT_INITIALIZED;
   }
-  
+
   std::future<bool> ftThread;
   bool startedFT = false;
   if(!fti->isRunning())
@@ -129,7 +129,7 @@ Contact::EndCondition ContactControl::move(double fMax, double tMax, double vMax
   // Turn on ft monitoring
   monitorFT = true;
   std::future<bool> monitorThread = std::async(std::launch::async, &ContactControl::ftMonitor, this);
-  
+
   // Cancel move if there is already a move happenning
   if(isMoving)
   {
@@ -144,7 +144,7 @@ Contact::EndCondition ContactControl::move(double fMax, double tMax, double vMax
     isMoving = true;
     ROS_INFO("Starting move.");
   }
-  
+
   // Record start position
   startPose = mi->getCurrentPose();
 
@@ -240,12 +240,12 @@ Contact::EndCondition ContactControl::move(double fMax, double tMax, double vMax
         tempTransform.setOrigin(tf::Vector3(0.0,0.0,0.0));
         torqueTF = tempTransform * torqueTF;
       }
-      
+
       torque.at(Contact::DIM_RX) = torqueTF.getX();
       torque.at(Contact::DIM_RY) = torqueTF.getY();
       torque.at(Contact::DIM_RZ) = torqueTF.getZ();
     }
-    
+
     for(int i = 0; i<Contact::NUM_DIMS; i++)
     {
       getFT(static_cast<Contact::Dimension>(i), ft, time);
@@ -299,7 +299,7 @@ Contact::EndCondition ContactControl::move(double fMax, double tMax, double vMax
     }
     else
     {
-      ROS_INFO_STREAM("Met end condition. Stopping move."); 
+      ROS_INFO_STREAM("Met end condition. Stopping move.");
     }
     loopRate.sleep();
     // Publish data to be plotted
@@ -309,7 +309,7 @@ Contact::EndCondition ContactControl::move(double fMax, double tMax, double vMax
     ////ROS_INFO_STREAM("Travel: " << travel);
     //ROS_INFO_STREAM("Force or Torque: " << ft);
     ////ROS_INFO_STREAM("Velocity: " << (vMax - (ft/k)));
-  } 
+  }
   ROS_INFO("Finished move.");
   for(int j = 0; j<Contact::NUM_DIMS; j++)
   {
@@ -317,16 +317,16 @@ Contact::EndCondition ContactControl::move(double fMax, double tMax, double vMax
   }
   isMoving = false;
   gravBalance = false;
-  
+
   //Turn off FT monitor
   monitorFT = false;
   if(startedFT)
     fti->stop();
   monitorThread.get();
-  
+
   if(!startedFT)
     return endCondition;
-    
+
   ftThread.get();
   return endCondition;
 }
